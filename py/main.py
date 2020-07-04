@@ -34,11 +34,13 @@ def build_num_db(msgs):
 
 def build_num_illustration(db):
 
-    width = 2000
+    mode = 3
+    width = 6000
     height = 2000
     colors = [
-        (0.0118, 0.3529, 0.4549, 0.5),
-        (0.9412, 0.0196, 0.3216, 0.3)
+        [0.0118, 0.3529, 0.4549],
+        [0.9412, 0.0196, 0.3216],
+        [0.9, 0.6]
     ]
 
     illustration = plt.figure()
@@ -51,14 +53,44 @@ def build_num_illustration(db):
     unitWidth = width / (len(db) + 1)
 
     for day in db:
-        for i in range(2):
-            ax.add_patch(patches.Rectangle(
-                (day * unitWidth, 0),
-                unitWidth,
-                db[day][i] * unitHeight,
-                linewidth = 0,
-                color = colors[i]
-            ))
+        marker = 0
+        if mode == 1:
+            # Mode 1 Overlap
+            maxInd = db[day].index(max(db[day])) # Either Send or Receive are larger
+            for i in range(maxInd, maxInd + 2 * (-1) ** maxInd, (-1) ** maxInd):
+                ax.add_patch(patches.Rectangle(
+                    (day * unitWidth, 0),
+                    unitWidth,
+                    db[day][i] * unitHeight,
+                    linewidth = 0,
+                    color = tuple(colors[i] + [colors[2][marker]])
+                ))
+                marker += 1
+        
+        elif mode == 2:
+            # Mode 2 Accumulate
+            minInd = db[day].index(min(db[day]))
+            for i in range(minInd, minInd + 2 * (-1) ** minInd, (-1) ** minInd):
+                ax.add_patch(patches.Rectangle(
+                    (day * unitWidth, marker * db[day][1 - i] * unitHeight),
+                    unitWidth,
+                    db[day][i] * unitHeight,
+                    linewidth = 0,
+                    color = tuple(colors[i] + [colors[2][0]])
+                ))
+                marker += 1
+
+        elif mode == 3:
+            # Mode 3 Mirror
+            for i in range(2):
+                ax.add_patch(patches.Rectangle(
+                    (day * unitWidth, height / 2),
+                    unitWidth,
+                    db[day][i] * unitHeight * (-1) ** (1 - i),
+                    linewidth = 0,
+                    color = tuple(colors[i] + [colors[2][0]])
+                ))
+        
     plt.axis('off')
     plt.tight_layout()
     plt.show()
