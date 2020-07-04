@@ -1,0 +1,11 @@
+data/
+venv/
+node_modules/
+.DS_Store
+*__pycache__
+.vscode
+
+*secret.py
+
+*MM.sqlite
+*WCDB_Contact.sqlite
