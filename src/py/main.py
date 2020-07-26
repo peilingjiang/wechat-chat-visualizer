@@ -1,3 +1,6 @@
+# Delete the following line if secret.py doesn't exist
+from secret import secret
+
 import hashlib
 import sqlite3
 import pandas as pd
@@ -6,10 +9,6 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import time
-
-# Delete the following line if secret.py doesn't exist
-from secret import secret
-
 
 def get_date(createTime):
     return date(1970, 1, 1) + timedelta(seconds = int(createTime))
@@ -111,4 +110,3 @@ if __name__ == "__main__":
         # Numbers of messages
         numDb = build_num_db(history)
         build_num_illustration(numDb)
-
